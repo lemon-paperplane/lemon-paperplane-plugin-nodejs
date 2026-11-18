@@ -1,0 +1,7 @@
+{
+  "name": "uni-preset-vue",
+  "scripts": {"serve": "vite preview", "dev": "vite --host", "build": "vite build", "lint": 3},
+  "dependencies": {"vue": "^3.5.13"},
+  "devDependencies": {"vite": "^7.3.0", "@vitejs/plugin-vue": "^6.0.3"},
+  "engines": {"node": "^20.19.0 || >=22.12.0"}
+}

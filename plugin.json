@@ -1,0 +1,912 @@
+{
+  "id": "nodejs",
+  "name": "%plugin.name%",
+  "version": "0.1.0",
+  "vendor": "Lemon Paperplane",
+  "description": "%plugin.description%",
+  "icon": "icons/nodejs.svg",
+  "license": "MIT",
+  "category": "language",
+  "engines": {
+    "paperplane": ">=0.1.0 <0.2.0"
+  },
+  "protocol": 1,
+  "executable": "bin/paperplane-plugin-nodejs",
+  "activation": {
+    "files": [
+      "package.json"
+    ]
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "javascript",
+        "name": "JavaScript",
+        "extensions": [
+          ".js",
+          ".mjs",
+          ".cjs",
+          ".jsx"
+        ],
+        "module": "editor/lang-javascript.js",
+        "lineComment": "//",
+        "blockComment": [
+          "/*",
+          "*/"
+        ]
+      },
+      {
+        "id": "typescript",
+        "name": "TypeScript",
+        "extensions": [
+          ".ts",
+          ".mts",
+          ".cts"
+        ],
+        "module": "editor/lang-typescript.js",
+        "lineComment": "//",
+        "blockComment": [
+          "/*",
+          "*/"
+        ]
+      },
+      {
+        "id": "tsx",
+        "name": "TSX",
+        "extensions": [
+          ".tsx"
+        ],
+        "module": "editor/lang-tsx.js",
+        "lineComment": "//",
+        "blockComment": [
+          "/*",
+          "*/"
+        ]
+      },
+      {
+        "id": "json",
+        "name": "JSON",
+        "extensions": [
+          ".json",
+          ".map",
+          ".webmanifest",
+          ".har"
+        ],
+        "filenames": [
+          ".prettierrc",
+          ".stylelintrc",
+          ".lintstagedrc"
+        ],
+        "module": "editor/lang-json.js"
+      },
+      {
+        "id": "jsonc",
+        "name": "%lang.jsonc%",
+        "extensions": [
+          ".jsonc",
+          ".json5"
+        ],
+        "filenames": [
+          "tsconfig.json",
+          "jsconfig.json",
+          ".eslintrc",
+          ".eslintrc.json",
+          ".babelrc",
+          ".babelrc.json",
+          ".swcrc",
+          ".jshintrc",
+          "devcontainer.json",
+          ".devcontainer.json",
+          "settings.json",
+          "launch.json",
+          "tasks.json",
+          "extensions.json"
+        ],
+        "filenamePatterns": [
+          "tsconfig.*.json",
+          "jsconfig.*.json"
+        ],
+        "module": "editor/lang-jsonc.js",
+        "lineComment": "//",
+        "blockComment": [
+          "/*",
+          "*/"
+        ]
+      }
+    ],
+    "facets": [
+      {
+        "id": "nodejs",
+        "name": "Node.js",
+        "icon": "icons/nodejs.svg",
+        "category": "runtime",
+        "priority": 50
+      }
+    ],
+    "toolchains": [
+      {
+        "kind": "node",
+        "name": "Node.js",
+        "icon": "icons/nodejs.svg",
+        "installable": true
+      }
+    ],
+    "runConfigurationTypes": [
+      {
+        "id": "npm-script",
+        "name": "%runType.npmScript%",
+        "icon": "icons/npm.svg",
+        "facets": [
+          "nodejs"
+        ],
+        "options": [
+          {
+            "key": "script",
+            "title": "%opt.script%",
+            "type": "select",
+            "optionsFrom": "scripts",
+            "required": true
+          },
+          {
+            "key": "args",
+            "title": "%opt.args%",
+            "type": "string",
+            "info": "%opt.args.info%"
+          },
+          {
+            "key": "packageDir",
+            "title": "%opt.packageDir%",
+            "type": "select",
+            "optionsFrom": "packages",
+            "advanced": true,
+            "info": "%opt.packageDir.info%"
+          },
+          {
+            "key": "packageManager",
+            "title": "%opt.packageManager%",
+            "type": "select",
+            "default": "auto",
+            "advanced": true,
+            "info": "%opt.packageManager.info%",
+            "options": [
+              {
+                "value": "auto",
+                "label": "%opt.packageManager.auto%"
+              },
+              {
+                "value": "npm",
+                "label": "npm"
+              },
+              {
+                "value": "yarn",
+                "label": "yarn"
+              },
+              {
+                "value": "pnpm",
+                "label": "pnpm"
+              },
+              {
+                "value": "bun",
+                "label": "bun"
+              }
+            ]
+          },
+          {
+            "key": "runner",
+            "title": "%opt.runner%",
+            "type": "select",
+            "default": "direct",
+            "advanced": true,
+            "info": "%opt.runner.info%",
+            "options": [
+              {
+                "value": "direct",
+                "label": "%opt.runner.direct%"
+              },
+              {
+                "value": "packageManager",
+                "label": "%opt.runner.packageManager%"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "dependencyManagers": [
+      "npm",
+      "yarn",
+      "pnpm",
+      "bun"
+    ],
+    "diagnostics": [
+      {
+        "id": "node.openssl-legacy",
+        "hint": "digital envelope routines",
+        "pattern": "digital envelope routines::(?:unsupported|initialization error)",
+        "severity": "error",
+        "title": "%diag.node.openssl-legacy.title%",
+        "message": "%diag.node.openssl-legacy.message%",
+        "fixes": [
+          {
+            "id": "legacy",
+            "title": "%fix.opensslLegacy%",
+            "kind": "appendEnv",
+            "params": {
+              "key": "NODE_OPTIONS",
+              "value": "--openssl-legacy-provider",
+              "scope": "project"
+            },
+            "recommended": true
+          },
+          {
+            "id": "node16",
+            "title": "%fix.useNode16%",
+            "kind": "setToolchain",
+            "params": {
+              "kind": "node",
+              "constraint": "16"
+            }
+          }
+        ]
+      },
+      {
+        "id": "node.port-in-use",
+        "hint": "EADDRINUSE",
+        "pattern": "EADDRINUSE.*:(\\d{2,5})\\b",
+        "severity": "error",
+        "title": "%diag.node.port-in-use.title%",
+        "message": "%diag.node.port-in-use.message%",
+        "fixes": [
+          {
+            "id": "kill",
+            "title": "%fix.killPort%",
+            "kind": "killPort",
+            "params": {
+              "port": "{1}"
+            },
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "node.command-not-found",
+        "hint": "not found",
+        "pattern": "\\b(?:sh|bash|dash)(?:\\[\\d+\\])?:\\s+(?:\\d+:\\s+)?([\\w@./+-]+): (?:command )?not found",
+        "severity": "error",
+        "title": "%diag.node.command-not-found.title%",
+        "message": "%diag.node.command-not-found.message%",
+        "fixes": [
+          {
+            "id": "install",
+            "title": "%fix.installDependencies%",
+            "kind": "installDependencies",
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "node.command-not-found-zsh",
+        "hint": "command not found:",
+        "pattern": "zsh:\\d*:?\\s*command not found: ([\\w@./+-]+)",
+        "severity": "error",
+        "title": "%diag.node.command-not-found.title%",
+        "message": "%diag.node.command-not-found.message%",
+        "fixes": [
+          {
+            "id": "install",
+            "title": "%fix.installDependencies%",
+            "kind": "installDependencies",
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "node.command-not-recognized",
+        "hint": "is not recognized as an internal or external command",
+        "pattern": "'([\\w@./+-]+)' is not recognized as an internal or external command",
+        "severity": "error",
+        "title": "%diag.node.command-not-found.title%",
+        "message": "%diag.node.command-not-found.message%",
+        "fixes": [
+          {
+            "id": "install",
+            "title": "%fix.installDependencies%",
+            "kind": "installDependencies",
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "node.command-not-recognized-zh",
+        "hint": "不是内部或外部命令",
+        "pattern": "'([\\w@./+-]+)' 不是内部或外部命令",
+        "severity": "error",
+        "title": "%diag.node.command-not-found.title%",
+        "message": "%diag.node.command-not-found.message%",
+        "fixes": [
+          {
+            "id": "install",
+            "title": "%fix.installDependencies%",
+            "kind": "installDependencies",
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "node.module-not-found",
+        "hint": "Cannot find module",
+        "pattern": "Cannot find module '([^./'][^']*)'",
+        "severity": "error",
+        "title": "%diag.node.module-not-found.title%",
+        "message": "%diag.node.module-not-found.message%",
+        "fixes": [
+          {
+            "id": "install",
+            "title": "%fix.installDependencies%",
+            "kind": "installDependencies",
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "node.package-not-found",
+        "hint": "Cannot find package",
+        "pattern": "Cannot find package '([^']+)'",
+        "severity": "error",
+        "title": "%diag.node.module-not-found.title%",
+        "message": "%diag.node.module-not-found.message%",
+        "fixes": [
+          {
+            "id": "install",
+            "title": "%fix.installDependencies%",
+            "kind": "installDependencies",
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "node.bin-permission",
+        "hint": "Permission denied",
+        "pattern": "node_modules/\\.bin/([^\\s:]+): Permission denied",
+        "severity": "error",
+        "title": "%diag.node.bin-permission.title%",
+        "message": "%diag.node.bin-permission.message%",
+        "fixes": [
+          {
+            "id": "install",
+            "title": "%fix.installDependencies%",
+            "kind": "installDependencies",
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "node.engine-yarn",
+        "hint": "The engine \"node\" is incompatible",
+        "pattern": "The engine \\\"node\\\" is incompatible with this module\\. Expected version \\\"([^\\\"]+)\\\"\\. Got \\\"([^\\\"]+)\\\"",
+        "severity": "error",
+        "title": "%diag.node.engine-yarn.title%",
+        "message": "%diag.node.engine-yarn.message%",
+        "stages": [
+          "install"
+        ],
+        "fixes": [
+          {
+            "id": "node",
+            "title": "%fix.useRequiredNode%",
+            "kind": "setToolchain",
+            "params": {
+              "kind": "node",
+              "constraint": "{1}"
+            },
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "node.engine-npm",
+        "hint": "EBADENGINE",
+        "pattern": "EBADENGINE\\s+required: \\{ node: '([^']+)'",
+        "severity": "warning",
+        "title": "%diag.node.engine-yarn.title%",
+        "message": "%diag.node.engine-npm.message%",
+        "stages": [
+          "install"
+        ],
+        "fixes": [
+          {
+            "id": "node",
+            "title": "%fix.useRequiredNode%",
+            "kind": "setToolchain",
+            "params": {
+              "kind": "node",
+              "constraint": "{1}"
+            },
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "node.engine-pnpm",
+        "hint": "Expected version: ",
+        "pattern": "^\\s*Expected version: (\\S.*?)\\s*$",
+        "severity": "error",
+        "title": "%diag.node.engine-yarn.title%",
+        "message": "%diag.node.engine-npm.message%",
+        "stages": [
+          "install"
+        ],
+        "fixes": [
+          {
+            "id": "node",
+            "title": "%fix.useRequiredNode%",
+            "kind": "setToolchain",
+            "params": {
+              "kind": "node",
+              "constraint": "{1}"
+            },
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "node.vite-requires-node",
+        "hint": "Vite requires Node.js version",
+        "pattern": "Vite requires Node\\.js version (\\d+(?:\\.\\d+)*)\\+ or (\\d+(?:\\.\\d+)*)\\+",
+        "severity": "error",
+        "title": "%diag.node.vite-requires-node.title%",
+        "message": "%diag.node.vite-requires-node.message%",
+        "fixes": [
+          {
+            "id": "node",
+            "title": "%fix.useRequiredNode%",
+            "kind": "setToolchain",
+            "params": {
+              "kind": "node",
+              "constraint": "^{1} || >={2}"
+            },
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "node.vite-requires-node-single",
+        "hint": "Vite requires Node.js version",
+        "pattern": "Vite requires Node\\.js version (\\d+(?:\\.\\d+)*)\\+\\.",
+        "severity": "error",
+        "title": "%diag.node.vite-requires-node.title%",
+        "message": "%diag.node.vite-requires-node.message%",
+        "fixes": [
+          {
+            "id": "node",
+            "title": "%fix.useRequiredNode%",
+            "kind": "setToolchain",
+            "params": {
+              "kind": "node",
+              "constraint": ">={1}"
+            },
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "node.crypto-hash",
+        "hint": "crypto.hash is not a function",
+        "pattern": "crypto\\.hash is not a function",
+        "severity": "error",
+        "title": "%diag.node.crypto-hash.title%",
+        "message": "%diag.node.crypto-hash.message%",
+        "fixes": [
+          {
+            "id": "node",
+            "title": "%fix.useRequiredNode%",
+            "kind": "setToolchain",
+            "params": {
+              "kind": "node",
+              "constraint": "^20.19 || >=22.12"
+            },
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "node.styletext",
+        "hint": "does not provide an export named 'styleText'",
+        "pattern": "does not provide an export named 'styleText'",
+        "severity": "error",
+        "title": "%diag.node.crypto-hash.title%",
+        "message": "%diag.node.crypto-hash.message%",
+        "fixes": [
+          {
+            "id": "node",
+            "title": "%fix.useRequiredNode%",
+            "kind": "setToolchain",
+            "params": {
+              "kind": "node",
+              "constraint": "^20.19 || >=22.12"
+            },
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "node.eresolve",
+        "hint": "ERESOLVE",
+        "pattern": "(?:code ERESOLVE|ERESOLVE (?:unable to resolve|could not resolve))",
+        "severity": "error",
+        "title": "%diag.node.eresolve.title%",
+        "message": "%diag.node.eresolve.message%",
+        "stages": [
+          "install"
+        ],
+        "fixes": [
+          {
+            "id": "legacyPeerDeps",
+            "title": "%fix.legacyPeerDeps%",
+            "kind": "custom",
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "node.pnpm-peer",
+        "hint": "ERR_PNPM_PEER_DEP_ISSUES",
+        "pattern": "ERR_PNPM_PEER_DEP_ISSUES",
+        "severity": "error",
+        "title": "%diag.node.eresolve.title%",
+        "message": "%diag.node.eresolve.message%",
+        "stages": [
+          "install"
+        ],
+        "fixes": [
+          {
+            "id": "legacyPeerDeps",
+            "title": "%fix.legacyPeerDeps%",
+            "kind": "custom",
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "node.lockfile-npm",
+        "hint": "can only install packages when",
+        "pattern": "can only install packages when your package\\.json and package-lock\\.json",
+        "severity": "error",
+        "title": "%diag.node.lockfile.title%",
+        "message": "%diag.node.lockfile.message%",
+        "stages": [
+          "install"
+        ],
+        "fixes": [
+          {
+            "id": "relaxedLockfile",
+            "title": "%fix.relaxedLockfile%",
+            "kind": "custom",
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "node.lockfile-yarn",
+        "hint": "Your lockfile needs to be updated",
+        "pattern": "Your lockfile needs to be updated, but yarn was run with `--frozen-lockfile`",
+        "severity": "error",
+        "title": "%diag.node.lockfile.title%",
+        "message": "%diag.node.lockfile.message%",
+        "stages": [
+          "install"
+        ],
+        "fixes": [
+          {
+            "id": "relaxedLockfile",
+            "title": "%fix.relaxedLockfile%",
+            "kind": "custom",
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "node.lockfile-pnpm",
+        "hint": "ERR_PNPM_OUTDATED_LOCKFILE",
+        "pattern": "ERR_PNPM_OUTDATED_LOCKFILE",
+        "severity": "error",
+        "title": "%diag.node.lockfile.title%",
+        "message": "%diag.node.lockfile.message%",
+        "stages": [
+          "install"
+        ],
+        "fixes": [
+          {
+            "id": "relaxedLockfile",
+            "title": "%fix.relaxedLockfile%",
+            "kind": "custom",
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "node.lockfile-bun",
+        "hint": "lockfile is frozen",
+        "pattern": "lockfile had changes, but lockfile is frozen",
+        "severity": "error",
+        "title": "%diag.node.lockfile.title%",
+        "message": "%diag.node.lockfile.message%",
+        "stages": [
+          "install"
+        ],
+        "fixes": [
+          {
+            "id": "relaxedLockfile",
+            "title": "%fix.relaxedLockfile%",
+            "kind": "custom",
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "node.heap-oom",
+        "hint": "heap out of memory",
+        "pattern": "JavaScript heap out of memory",
+        "severity": "error",
+        "title": "%diag.node.heap-oom.title%",
+        "message": "%diag.node.heap-oom.message%",
+        "fixes": [
+          {
+            "id": "heap",
+            "title": "%fix.moreHeap%",
+            "kind": "appendEnv",
+            "params": {
+              "key": "NODE_OPTIONS",
+              "value": "--max-old-space-size=4096"
+            },
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "node.gyp",
+        "hint": "gyp ERR!",
+        "pattern": "gyp ERR! (?:stack|find Python|find VS|configure error|build error)",
+        "severity": "error",
+        "title": "%diag.node.gyp.title%",
+        "message": "%diag.node.gyp.message%",
+        "stages": [
+          "install"
+        ],
+        "fixes": [
+          {
+            "id": "docs",
+            "title": "%fix.gypDocs%",
+            "kind": "openUrl",
+            "params": {
+              "url": "https://github.com/nodejs/node-gyp#installation"
+            }
+          }
+        ]
+      },
+      {
+        "id": "node.node-sass",
+        "hint": "Node Sass",
+        "pattern": "Node Sass (?:does not yet support|could not find a binding for) your current environment",
+        "severity": "error",
+        "title": "%diag.node.node-sass.title%",
+        "message": "%diag.node.node-sass.message%",
+        "fixes": [
+          {
+            "id": "nodeSassVersion",
+            "title": "%fix.nodeSassVersion%",
+            "kind": "custom",
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "node.enospc-watchers",
+        "hint": "ENOSPC",
+        "pattern": "ENOSPC: System limit for number of file watchers reached",
+        "severity": "error",
+        "title": "%diag.node.enospc-watchers.title%",
+        "message": "%diag.node.enospc-watchers.message%",
+        "fixes": [
+          {
+            "id": "polling",
+            "title": "%fix.watchPolling%",
+            "kind": "setEnv",
+            "params": {
+              "key": "CHOKIDAR_USEPOLLING",
+              "value": "true"
+            }
+          }
+        ]
+      },
+      {
+        "id": "node.corepack-keyid",
+        "hint": "Cannot find matching keyid",
+        "pattern": "Cannot find matching keyid",
+        "severity": "error",
+        "title": "%diag.node.corepack-keyid.title%",
+        "message": "%diag.node.corepack-keyid.message%",
+        "fixes": [
+          {
+            "id": "keys",
+            "title": "%fix.corepackKeys%",
+            "kind": "setEnv",
+            "params": {
+              "key": "COREPACK_INTEGRITY_KEYS",
+              "value": "0"
+            },
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "node.node-options-flag",
+        "hint": "is not allowed in NODE_OPTIONS",
+        "pattern": "(--[\\w-]+) is not allowed in NODE_OPTIONS",
+        "severity": "error",
+        "title": "%diag.node.node-options-flag.title%",
+        "message": "%diag.node.node-options-flag.message%",
+        "fixes": [
+          {
+            "id": "unset",
+            "title": "%fix.unsetNodeOptions%",
+            "kind": "unsetEnv",
+            "params": {
+              "key": "NODE_OPTIONS"
+            },
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "node.yarn-network",
+        "hint": "trouble with your network connection",
+        "pattern": "There appears to be trouble with your network connection",
+        "severity": "warning",
+        "title": "%diag.node.yarn-network.title%",
+        "message": "%diag.node.yarn-network.message%",
+        "stages": [
+          "install"
+        ]
+      }
+    ],
+    "urlPatterns": [
+      {
+        "hint": "Local:",
+        "pattern": "Local:\\s+(https?://[^\\s'\\\")\\]]+)",
+        "ready": true
+      },
+      {
+        "hint": "Loopback:",
+        "pattern": "Loopback:\\s+(https?://[^\\s'\\\")\\]]+)",
+        "ready": true
+      },
+      {
+        "hint": "Project is running at",
+        "pattern": "Project is running at:?\\s*(https?://[^\\s'\\\")\\]]+)",
+        "ready": true
+      },
+      {
+        "hint": "url: http",
+        "pattern": "started server on \\S+, url: (https?://\\S+)",
+        "ready": true
+      },
+      {
+        "hint": "Listening on",
+        "pattern": "Listening on:?\\s+(https?://[^\\s'\\\")\\]]+)",
+        "ready": true
+      },
+      {
+        "hint": "open your browser on",
+        "pattern": "open your browser on (https?://[^\\s*]+)",
+        "ready": true
+      },
+      {
+        "hint": "://",
+        "pattern": "(?i)\\b(?:server|app|application|api|service)\\b.*\\b(?:running|listening|started|available|ready|serving)\\b.*?(https?://(?:localhost|127\\.0\\.0\\.1|0\\.0\\.0\\.0|\\[::1?\\])(?::\\d+)?[^\\s'\\\")\\]]*)",
+        "ready": true
+      },
+      {
+        "hint": "istening on port",
+        "pattern": "(?i)listening on port:?\\s*(\\d{2,5})\\b",
+        "url": "http://localhost:{1}",
+        "ready": true
+      }
+    ],
+    "readyPatterns": [
+      {
+        "hint": "ready in",
+        "pattern": "\\bready in \\d+(?:\\.\\d+)?\\s*m?s\\b"
+      },
+      {
+        "hint": "Ready in",
+        "pattern": "Ready in \\d"
+      },
+      {
+        "hint": "ompiled successfully",
+        "pattern": "[Cc]ompiled successfully"
+      },
+      {
+        "hint": "Compiled with warnings",
+        "pattern": "Compiled with warnings"
+      },
+      {
+        "hint": "Build complete. Watching for changes",
+        "pattern": "Build complete\\. Watching for changes"
+      },
+      {
+        "hint": "atching for",
+        "pattern": "(?i)watching for (?:file )?changes"
+      }
+    ],
+    "actions": [
+      {
+        "id": "install",
+        "title": "%action.install%",
+        "icon": "builtin:download",
+        "facets": [
+          "nodejs"
+        ],
+        "group": "dependencies",
+        "locations": [
+          "project.toolbar",
+          "project.menu",
+          "card.menu"
+        ]
+      },
+      {
+        "id": "reinstall",
+        "title": "%action.reinstall%",
+        "icon": "builtin:refresh-cw",
+        "facets": [
+          "nodejs"
+        ],
+        "group": "dependencies",
+        "confirm": "%action.reinstall.confirm%",
+        "locations": [
+          "project.menu"
+        ]
+      }
+    ],
+    "settings": [
+      {
+        "key": "binaryMirrors",
+        "title": "%setting.binaryMirrors%",
+        "type": "boolean",
+        "default": true,
+        "info": "%setting.binaryMirrors.info%"
+      }
+    ],
+    "views": [
+      {
+        "id": "dependencies",
+        "title": "%view.dependencies%",
+        "icon": "builtin:package",
+        "location": "project.tab",
+        "facets": [
+          "nodejs"
+        ],
+        "order": 20
+      }
+    ],
+    "tools": [
+      {
+        "name": "scripts",
+        "title": "%tool.scripts%",
+        "scope": "module",
+        "readOnly": true,
+        "description": "List the package.json scripts of a Node.js module together with the detected package manager (npm/yarn/pnpm/bun and version), the lockfile in use, the dependency install state (ok/missing/outdated/none), the inferred Node.js version requirement (constraint, preferred version and where it came from) and the default script Paperplane runs. Optional argument packageDir selects a workspace member (path relative to the module). Each script includes its raw command and the exact command line used to run it.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "packageDir": {
+              "type": "string",
+              "description": "Workspace member directory relative to the module root; empty for the module itself."
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    ]
+  }
+}

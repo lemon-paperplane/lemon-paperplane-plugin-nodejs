@@ -1,0 +1,6 @@
+packages:
+  # 应用
+  - 'packages/*'
+  - "!**/test/**"
+onlyBuiltDependencies:
+  - esbuild
